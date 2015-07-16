@@ -3,7 +3,7 @@
 set -e
 
 
-function update() {
+function self_update() {
     echo ">> Updating"
     SCRIPT="$(dirname $0)/$(basename $0)"
     curl --silent https://raw.githubusercontent.com/panubo/strider-deploy/master/strider.sh > ${SCRIPT}.tmp
@@ -87,7 +87,7 @@ function cleanup() {
 
 
 function help() {
-    echo "Specify which phase to run <strider.sh> <update|environment|prepare|test|deploy|cleanup>"
+    echo "Specify which phase to run <strider.sh> <self_update|environment|prepare|test|deploy|cleanup>"
 }
 
 
