@@ -1,8 +1,8 @@
-# Strider-CD Custom Script
+# Strider-CD Deployment Script
 
-Strider-CD custom script for automated deployments on [Panubo](http://www.panubo.com) managed infrastructure.
+Custom script for automated deployments on [Panubo](http://www.panubo.com) managed infrastructure using [Strider-CD](http://stridercd.com).
 
-This is designed to work with [Fleet Deploy](https://github.com/panubo/fleet-deploy) and [Fleet Deploy Atomic](https://github.com/panubo/fleet-deploy-atomic).
+This is designed to work in conjunction with [Fleet Deploy](https://github.com/panubo/fleet-deploy) and [Fleet Deploy Atomic](https://github.com/panubo/fleet-deploy-atomic).
 
 ## Installation
 
