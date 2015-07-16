@@ -17,7 +17,7 @@ function environment() {
         pip install --upgrade git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
         pip install --upgrade git+https://github.com/panubo/fleet-deploy-atomic#egg=fleet-deploy-atomic
     else
-        curl --silent https://raw.githubusercontent.com/adlibre/python-bootstrap/master/bootstrap.sh | bash -s venv git+https://github.com/panubo/fleet-deploy.git#fleet-deploy
+        curl --silent https://raw.githubusercontent.com/adlibre/python-bootstrap/master/bootstrap.sh | bash -s venv git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
     fi
 }
 
