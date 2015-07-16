@@ -2,6 +2,13 @@
 
 set -e
 
+function update() {
+    echo ">> Updating"
+    SCRIPT="$(dirname $0)/$(basename $0)"
+    curl --silent https://raw.githubusercontent.com/panubo/strider-deploy/master/strider.sh > ${SCRIPT}.tmp
+    exec bash -c "mv ${SCRIPT}.tmp ${SCRIPT}"
+}
+
 function environment() {
     echo ">> Set Environment"
     cd ${VENV_ROOT-data}
@@ -51,7 +58,7 @@ function cleanup() {
 }
 
 function help() {
-    echo "Specify which phase to run <strider.sh> <environment|prepare|test|deploy|cleanup>"
+    echo "Specify which phase to run <strider.sh> <update|environment|prepare|test|deploy|cleanup>"
 }
 
 ${1-help}
