@@ -6,7 +6,7 @@ function update() {
     echo ">> Updating"
     SCRIPT="$(dirname $0)/$(basename $0)"
     curl --silent https://raw.githubusercontent.com/panubo/strider-deploy/master/strider.sh > ${SCRIPT}.tmp
-    exec bash -c "mv ${SCRIPT}.tmp ${SCRIPT}"
+    exec bash -c "mv ${SCRIPT}.tmp ${SCRIPT} && chmod +x ${SCRIPT}"
 }
 
 function environment() {
