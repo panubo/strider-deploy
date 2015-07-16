@@ -56,15 +56,19 @@ function deploy() {
         exit 128
     fi
 
-    UNIT="${GIT_NAME}-${GIT_BRANCH}"
-    # Export Git Rev
+    if [ -z "$DEPLOY_UNIT" ]; then
+        DEPLOY_UNIT="${GIT_NAME}-${GIT_BRANCH}"
+        echo "Using unit $DEPLOY_UNIT"
+    fi
+
+    # Export Git Rev Hash
     export GIT_HASH=$(git rev-parse HEAD)
     # Expose ETCD vars
     for env in `tr '\0' '\n' < /proc/1/environ | grep ETCD`; do export $env; done
     # Activate Venv
     cd /data && . venv/bin/activate
     # Run Deploy
-    deploy.py --name $UNIT --method atomic --instances ${DEPLOY_INSTANCES-2} --chunking ${DEPLOY_CHUNKING-1} --tag ${GIT_HASH:0:7} --delay 0 --atomic-handler $(which atomic.py)
+    deploy.py --name ${DEPLOY_UNIT} --instances ${DEPLOY_INSTANCES-2} --chunking ${DEPLOY_CHUNKING-1} --tag ${GIT_HASH:0:7} --method atomic --atomic-handler $(which atomic.py) --delay 0
 }
 
 
