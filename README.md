@@ -32,7 +32,7 @@ This assumes you already have a working [Strider-CD](http://stridercd.com) insta
 ```
 #### Deploy
 
-AS an example for atomic deployment of two instances, with one new instance created up while another is destroyed.
+As an example for atomic deployment of two instances, with one new instance created up while another is destroyed.
 
 ```
 export DEPLOY_INSTANCES=2
@@ -48,5 +48,5 @@ export DEPLOY_CHUNKING=1
 
 4. Configure Metadata plugin:
 
-Key: `GIT_BRANCH` = Value: `ref.branch`
-Key: `GIT_NAME` = Value: `project.provider.config.repo`
+- Key: `GIT_BRANCH` = Value: `ref.branch`
+- Key: `GIT_NAME` = Value: `project.provider.config.repo`
