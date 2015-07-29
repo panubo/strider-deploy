@@ -7,6 +7,7 @@ function self-update() {
     echo ">> Updating"
     SCRIPT="$(dirname $0)/$(basename $0)"
     curl --silent https://raw.githubusercontent.com/panubo/strider-deploy/master/strider.sh > ${SCRIPT}.tmp
+    touch ${SCRIPT}.tmp
     exec bash -c "mv ${SCRIPT}.tmp ${SCRIPT} && chmod +x ${SCRIPT}"
 }
 
@@ -20,7 +21,6 @@ function environment() {
             . venv/bin/activate
             pip install --upgrade git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
             pip install --upgrade git+https://github.com/panubo/fleet-deploy-atomic#egg=fleet-deploy-atomic
-            touch $0  # update our timestamp
         else
             echo "Not updating environment"
         fi
@@ -28,6 +28,7 @@ function environment() {
         curl --silent https://raw.githubusercontent.com/adlibre/python-bootstrap/master/bootstrap.sh | bash -s venv git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
     fi
 }
+
 
 function prepare() {
     echo ">> Preparing Checkout"
