@@ -33,7 +33,10 @@ function prepare() {
     CHECKOUT_DIR=$(basename $(pwd))
     cd ../..  # into .strider
     mkdir -p git # prepare
-    rsync -a --delete data/$CHECKOUT_DIR/ git/$GIT_NAME/ # copy our clone
+    git clone --bare data/$CHECKOUT_DIR/ git/${GIT_NAME}-tmp/ # checkout a bare clone
+    [ -d "git/${GIT_NAME}/" ] && mv git/${GIT_NAME}/ git/${GIT_NAME}-old/
+    mv git/${GIT_NAME}-tmp/ git/${GIT_NAME}/
+    rm -rf git/${GIT_NAME}-old/
 }
 
 
