@@ -29,7 +29,6 @@ function environment() {
     fi
 }
 
-
 function prepare() {
     echo ">> Preparing Checkout"
     if [ -z "$GIT_NAME" ]; then
@@ -39,6 +38,8 @@ function prepare() {
     CHECKOUT_DIR=$(basename $(pwd))
     cd ../..  # into .strider
     mkdir -p git # prepare
+    [ -d "git/${GIT_NAME}-tmp/" ] && rm -rf git/${GIT_NAME}-tmp/  # Remove tmp dir if we have a previously failed build
+    [ -d "git/${GIT_NAME}-old/" ] && rm -rf git/${GIT_NAME}-old/  # Remove old dir if we have a previously failed build
     git clone --bare data/$CHECKOUT_DIR/ git/${GIT_NAME}-tmp/ # checkout a bare clone
     [ -d "git/${GIT_NAME}/" ] && mv git/${GIT_NAME}/ git/${GIT_NAME}-old/
     mv git/${GIT_NAME}-tmp/ git/${GIT_NAME}/
