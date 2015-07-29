@@ -15,9 +15,14 @@ function environment() {
     echo ">> Set Environment"
     cd ${VENV_ROOT-/data}
     if [ -f 'venv/bin/activate' ]; then
-        . venv/bin/activate
-        pip install --upgrade git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
-        pip install --upgrade git+https://github.com/panubo/fleet-deploy-atomic#egg=fleet-deploy-atomic
+        if test $(find "$0" -mmin +120); then
+            . venv/bin/activate
+            pip install --upgrade git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
+            pip install --upgrade git+https://github.com/panubo/fleet-deploy-atomic#egg=fleet-deploy-atomic
+            touch $0  # update our timestamp
+        else
+            echo "Not updating environment"
+        fi
     else
         curl --silent https://raw.githubusercontent.com/adlibre/python-bootstrap/master/bootstrap.sh | bash -s venv git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
     fi
