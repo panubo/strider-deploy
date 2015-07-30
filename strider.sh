@@ -84,7 +84,7 @@ function deploy() {
     # Activate Venv
     cd /data && . venv/bin/activate
     # Run Deploy
-    deploy.py --name ${DEPLOY_UNIT} --instances ${DEPLOY_INSTANCES-2} --chunking ${DEPLOY_CHUNKING-1} --tag ${GIT_HASH:0:7} --method atomic --atomic-handler $(which atomic.py) --delay 0
+    deploy.py --name ${DEPLOY_UNIT} --instances ${DEPLOY_INSTANCES-2} --chunking ${DEPLOY_CHUNKING-${DEPLOY_INSTANCES-2}} --tag ${GIT_HASH:0:7} --method atomic --atomic-handler $(which atomic.py) --delay 0
 }
 
 
