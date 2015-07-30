@@ -20,7 +20,7 @@ function self-update() {
         touch ${SCRIPT}.tmp
         exec bash -c "mv ${SCRIPT}.tmp ${SCRIPT} && chmod +x ${SCRIPT}"
     else
-        echo ">> Not pdating $(basename $0)"
+        echo ">> Not Updating $(basename $0)"
     fi
 }
 
