@@ -2,13 +2,18 @@
 
 set -e
 
+UPDATE_INTERVAL=120
 
 function self-update() {
-    echo ">> Updating"
-    SCRIPT="$(dirname $0)/$(basename $0)"
-    curl --silent https://raw.githubusercontent.com/panubo/strider-deploy/master/strider.sh > ${SCRIPT}.tmp
-    touch ${SCRIPT}.tmp
-    exec bash -c "mv ${SCRIPT}.tmp ${SCRIPT} && chmod +x ${SCRIPT}"
+    if [ $(find "$0" -mmin +$UPDATE_INTERVAL) ]; then
+        echo ">> Updating $(basename $0)"
+        SCRIPT="$(dirname $0)/$(basename $0)"
+        curl --silent https://raw.githubusercontent.com/panubo/strider-deploy/master/strider.sh > ${SCRIPT}.tmp
+        touch ${SCRIPT}.tmp
+        exec bash -c "mv ${SCRIPT}.tmp ${SCRIPT} && chmod +x ${SCRIPT}"
+    else
+        echo ">> Not pdating $(basename $0)"
+    fi
 }
 
 
@@ -16,13 +21,13 @@ function environment() {
     echo ">> Set Environment"
     cd ${VENV_ROOT-/data}
     if [ -f 'venv/bin/activate' ]; then
-        if [ $(find "$0" -mmin +120) ]; then
-            echo "Updating"
+        if [ $(find "$0" -mmin +$UPDATE_INTERVAL) ]; then
+            echo ">> Updating Environment"
             . venv/bin/activate
             pip install --upgrade git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
             pip install --upgrade git+https://github.com/panubo/fleet-deploy-atomic#egg=fleet-deploy-atomic
         else
-            echo "Not updating environment"
+            echo ">> Not updating environment"
         fi
     else
         curl --silent https://raw.githubusercontent.com/adlibre/python-bootstrap/master/bootstrap.sh | bash -s venv git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
