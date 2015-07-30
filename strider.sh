@@ -7,9 +7,6 @@ set -e
 
 # Set defaults
 UPDATE_INTERVAL=${UPDATE_INTERVAL-120}
-DEPLOY_TAG=${DEPLOY_TAG-${GIT_HASH:0:7}}
-DEPLOY_INSTANCES=${DEPLOY_INSTANCES-2}
-DEPLOY_CHUNKING=${DEPLOY_CHUNKING-${DEPLOY_INSTANCES}}
 
 
 function self-update() {
@@ -87,12 +84,19 @@ function deploy() {
 
     # Export Git Rev Hash
     export GIT_HASH=$(git rev-parse HEAD)
+
+    # Defaults
+    DEPLOY_TAG=${DEPLOY_TAG-${GIT_HASH:0:7}}
+    DEPLOY_INSTANCES=${DEPLOY_INSTANCES-2}
+    DEPLOY_CHUNKING=${DEPLOY_CHUNKING-${DEPLOY_INSTANCES}}
+    DEPLOY_ATOMIC_HANDLER=${DEPLOY_ATOMIC_HANDLER-$(which atomic.py)}
+
     # Expose ETCD vars
     for env in `tr '\0' '\n' < /proc/1/environ | grep ETCD`; do export $env; done
     # Activate Venv
     cd /data && . venv/bin/activate
     # Run Deploy
-    deploy.py --name ${DEPLOY_UNIT} --instances ${DEPLOY_INSTANCES} --chunking ${DEPLOY_CHUNKING} --tag ${DEPLOY_TAG} --method atomic --atomic-handler $(which atomic.py) --delay 0
+    deploy.py --name ${DEPLOY_UNIT} --instances ${DEPLOY_INSTANCES} --chunking ${DEPLOY_CHUNKING} --tag ${DEPLOY_TAG} --method atomic --atomic-handler ${DEPLOY_ATOMIC_HANDLER} --delay 0
 }
 
 
