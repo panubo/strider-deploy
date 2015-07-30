@@ -16,7 +16,7 @@ function environment() {
     echo ">> Set Environment"
     cd ${VENV_ROOT-/data}
     if [ -f 'venv/bin/activate' ]; then
-        if test $(find "$0" -mmin +120); then
+        if [ $(find "$0" -mmin +120) ]; then
             echo "Updating"
             . venv/bin/activate
             pip install --upgrade git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
