@@ -2,7 +2,15 @@
 
 set -e
 
-UPDATE_INTERVAL=120
+# Load Config
+[ -f "$(dirname $0)/$0.conf" ] && . $(dirname $0)/$0.conf  # Source config if it exists
+
+# Set defaults
+UPDATE_INTERVAL=${UPDATE_INTERVAL-120}
+DEPLOY_TAG=${DEPLOY_TAG-${GIT_HASH:0:7}}
+DEPLOY_INSTANCES=${DEPLOY_INSTANCES-2}
+DEPLOY_CHUNKING=${DEPLOY_CHUNKING-${DEPLOY_INSTANCES}}
+
 
 function self-update() {
     if [ $(find "$0" -mmin +$UPDATE_INTERVAL) ]; then
@@ -84,7 +92,7 @@ function deploy() {
     # Activate Venv
     cd /data && . venv/bin/activate
     # Run Deploy
-    deploy.py --name ${DEPLOY_UNIT} --instances ${DEPLOY_INSTANCES-2} --chunking ${DEPLOY_CHUNKING-${DEPLOY_INSTANCES-2}} --tag ${GIT_HASH:0:7} --method atomic --atomic-handler $(which atomic.py) --delay 0
+    deploy.py --name ${DEPLOY_UNIT} --instances ${DEPLOY_INSTANCES} --chunking ${DEPLOY_CHUNKING} --tag ${DEPLOY_TAG} --method atomic --atomic-handler $(which atomic.py) --delay 0
 }
 
 
