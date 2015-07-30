@@ -3,7 +3,7 @@
 set -e
 
 # Load Config
-[ -f "$(dirname $0)/$0.conf" ] && . $(dirname $0)/$0.conf  # Source config if it exists
+[ -f "$0.conf" ] && . $0.conf  # Source config if it exists
 
 # Set defaults
 UPDATE_INTERVAL=${UPDATE_INTERVAL-120}
