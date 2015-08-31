@@ -6,13 +6,14 @@ set -e
 [ -f "$0.conf" ] && . $0.conf  # Source config if it exists
 
 # Set defaults
-UPDATE_INTERVAL=${UPDATE_INTERVAL:-120}
-USE_VENV=${USE_VENV:-true}
-VENV_ROOT=${VENV_ROOT:-/data}
+for env in `tr '\0' '\n' < /proc/1/environ | grep DEPLOY`; do export $env; done
+DEPLOY_UPDATE_INTERVAL=${DEPLOY_UPDATE_INTERVAL:-120}
+DEPLOY_USE_VENV=${DEPLOY_USE_VENV:-true}
+DEPLOY_VENV_ROOT=${DEPLOY_VENV_ROOT:-/data}
 
 
 function self-update() {
-    if [ $(find "$0" -mmin +$UPDATE_INTERVAL) ]; then
+    if [ $(find "$0" -mmin +$DEPLOY_UPDATE_INTERVAL) ]; then
         echo ">> Updating $(basename $0)"
         SCRIPT="$(dirname $0)/$(basename $0)"
         curl --silent https://raw.githubusercontent.com/panubo/strider-deploy/master/strider.sh > ${SCRIPT}.tmp
@@ -27,19 +28,19 @@ function self-update() {
 function environment() {
     echo ">> Set Environment"
     # Create virtualenv if required
-    if [ "${USE_VENV}" == "true" ] && [ ! -f '${VENV_ROOT}/venv/bin/activate' ]; then
-        cd ${VENV_ROOT}
+    if [ "${DEPLOY_USE_VENV}" == "true" ] && [ ! -f '${DEPLOY_VENV_ROOT}/venv/bin/activate' ]; then
+        cd ${DEPLOY_VENV_ROOT}
         curl --silent https://raw.githubusercontent.com/adlibre/python-bootstrap/master/bootstrap.sh | bash -s venv 
     fi
 
     # Activate if required
-    if [ "${USE_VENV}" == "true" ]; then
-        cd ${VENV_ROOT}
+    if [ "${DEPLOY_USE_VENV}" == "true" ]; then
+        cd ${DEPLOY_VENV_ROOT}
         . venv/bin/activate
     fi
 
     # Update if required
-    if [ $(find "$0" -mmin +$UPDATE_INTERVAL) ]; then
+    if [ $(find "$0" -mmin +$DEPLOY_UPDATE_INTERVAL) ]; then
         echo ">> Updating Environment"
         pip install --upgrade git+https://github.com/panubo/fleet-deploy.git#egg=fleet-deploy
         pip install --upgrade git+https://github.com/panubo/fleet-deploy-atomic#egg=fleet-deploy-atomic
@@ -102,7 +103,7 @@ function deploy() {
     for env in `tr '\0' '\n' < /proc/1/environ | grep ETCD`; do export $env; done
 
     # Activate Venv
-    [ "$USE_VENV" == "true" ] && cd ${VENV_ROOT} && . venv/bin/activate
+    [ "$DEPLOY_USE_VENV" == "true" ] && cd ${DEPLOY_VENV_ROOT} && . venv/bin/activate
 
     # Defaults
     DEPLOY_TAG=${DEPLOY_TAG-${GIT_HASH:0:7}}
