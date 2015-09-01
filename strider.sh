@@ -5,8 +5,8 @@ set -e
 [ "$DEBUG" == 'true' ] && set -x
 
 # Load Config
-[ -f $0.conf ] && . $0.conf  # Source config if it exists
-[ -f ~/.$0.conf ] && . ~/.$0.conf
+[ -f $(basename $0).conf ] && . $(basename $0).conf  # Source config if it exists
+[ -f ~/.$(basename $0).conf ] && . ~/.$(basename $0).conf
 
 # Set defaults
 for env in `tr '\0' '\n' < /proc/1/environ | grep DEPLOY`; do export $env; done
