@@ -14,6 +14,9 @@ DEPLOY_UPDATE_INTERVAL=${DEPLOY_UPDATE_INTERVAL:-120}
 DEPLOY_USE_VENV=${DEPLOY_USE_VENV:-true}
 DEPLOY_VENV_ROOT=${DEPLOY_VENV_ROOT:-/data}
 
+# Expose Etcd variables
+for env in `tr '\0' '\n' < /proc/1/environ | grep ETCD`; do export $env; done
+
 
 function self-update() {
     if [ $(find "$0" -mmin +$DEPLOY_UPDATE_INTERVAL) ]; then
@@ -101,9 +104,6 @@ function deploy() {
 
     # Export Git Rev Hash
     export GIT_HASH=$(git rev-parse HEAD)
-
-    # Expose ETCD vars
-    for env in `tr '\0' '\n' < /proc/1/environ | grep ETCD`; do export $env; done
 
     # Activate Venv
     [ "$DEPLOY_USE_VENV" == "true" ] && cd ${DEPLOY_VENV_ROOT} && . venv/bin/activate
