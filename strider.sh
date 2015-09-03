@@ -83,7 +83,7 @@ function prepare-wordpress() {
     APP_CODE=${GIT_NAME}-${GIT_BRANCH}
     HOST_DOMAIN=${HOST_DOMAIN:-example.com}
     UNIT_TEMPLATE=${UNIT_TEMPLATE:-'/data/units/wordpress@.service'}
-    docker run --rm --name ${APP_CODE}.init -v /mnt/data00/${APP_CODE}/static.env:/tmp/env -e MYSQL_PORT_3306_TCP_ADDR=${DB_HOST} -e MYSQL_ENV_MYSQL_ROOT_PASSWORD=$(etcdctl get /secrets/services/${DB_HOST}/mysql_root_password) -e APP_CODE=${APP_CODE} quay.io/panubo/wordpress-init
+    docker run --rm --name ${APP_CODE}.init -v /mnt/data00/${APP_CODE}/:/output/ -e MYSQL_PORT_3306_TCP_ADDR=${DB_HOST} -e MYSQL_ENV_MYSQL_ROOT_PASSWORD=$(etcdctl get /secrets/services/${DB_HOST}/mysql_root_password) -e APP_CODE=${APP_CODE} quay.io/panubo/wordpress-init /output/static.env
     j2 $UNIT_TEMPLATE > /tmp/${APP_CODE}@.service
     fleetctl destroy ${APP_CODE}@.service || true
     fleetctl submit /tmp/${APP_CODE}@.service
