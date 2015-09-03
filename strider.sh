@@ -78,6 +78,20 @@ function prepare() {
 }
 
 
+function prepare-wordpress() {
+    # Prepare cluster for wordpress deployment
+    APP_CODE=${GIT_NAME}-${GIT_BRANCH}
+    HOST_DOMAIN=${HOST_DOMAIN:-example.com}
+    UNIT_TEMPLATE=${UNIT_TEMPLATE:-'/data/units/wordpress@.service'}
+    docker run --rm --name ${APP_CODE}.init -v /mnt/data00/${APP_CODE}/static.env:/tmp/env -e MYSQL_PORT_3306_TCP_ADDR=${DB_HOST} -e MYSQL_ENV_MYSQL_ROOT_PASSWORD=$(etcdctl get /secrets/services/${DB_HOST}/mysql_root_password) -e APP_CODE=${APP_CODE} quay.io/panubo/wordpress-init
+    j2 $UNIT_TEMPLATE > /tmp/${APP_CODE}@.service
+    fleetctl destroy ${APP_CODE}@.service || true
+    fleetctl submit /tmp/${APP_CODE}@.service
+    docker run --rm --name ${APP_CODE}.vulcanize -e ETCDCTL_PEERS=$ETCDCTL_PEERS quay.io/panubo/vulcanizer --host ${APP_CODE}.${HOST_DOMAIN} --service-name ${APP_CODE}
+}
+
+
+
 function test() {
     echo ">> Test Phase"
     /bin/true
