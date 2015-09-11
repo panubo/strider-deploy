@@ -66,6 +66,8 @@ function prepare() {
         echo "ERROR: GIT_BRANCH not set"
         exit 128
     fi
+    # Force checkout branch
+    git checkout --force $GIT_BRANCH
     CHECKOUT_DIR=$(basename $(pwd))
     cd ../..  # into .strider
     mkdir -p git # prepare
@@ -139,6 +141,7 @@ function deploy() {
 
 function cleanup() {
     echo ">> Cleanup Checkout"
+    echo "Branches in work dir: $(git branch -a)"
     DIR=${1-$(pwd)}
     cd ..
     if [ -d "${DIR}/.git" ]; then
