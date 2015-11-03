@@ -91,7 +91,7 @@ function prepare-wordpress() {
     fleetctl destroy ${APP_CODE}@.service || true
     fleetctl submit /tmp/${APP_CODE}@.service
     docker rm ${APP_CODE}.vulcanize 2> /dev/null || true
-    docker run --rm ${APP_CODE}.vulcanize -e ETCDCTL_PEERS=$ETCDCTL_PEERS quay.io/panubo/vulcanizer --host ${APP_CODE}.${HOST_DOMAIN} --service-name ${APP_CODE}
+    docker run --rm ${APP_CODE}.vulcanize -e ETCDCTL_PEERS=$ETCDCTL_PEERS quay.io/panubo/vulcanizer --host ${APP_CODE}.${HOST_DOMAIN} --service-name ${APP_CODE} --backend ${APP_CODE}
 }
 
 
