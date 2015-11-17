@@ -69,6 +69,8 @@ function prepare() {
     DEPLOY_TAG=${DEPLOY_TAG-${GIT_HASH:0:7}}
     # Force checkout branch
     git checkout --force $GIT_BRANCH
+    # Force update submodules (if none) - this will sanity check the submodule setup
+    git submodule update --init
     CHECKOUT_DIR=$(basename $(pwd))
     cd ../..  # into .strider
     mkdir -p git # prepare
